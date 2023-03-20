@@ -6,6 +6,9 @@ on:
 
 name: Create Release for ARM
 
+permissions:
+  contents: write
+
 env:
   RELEASE_BIN: iptables_exporter
   RELEASE_ADDS: >-
