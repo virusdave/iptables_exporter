@@ -25,12 +25,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          target: aarch64-unknown-linux-musl
+      # - uses: actions-rs/toolchain@v1
+      #   with:
+      #     profile: minimal
+      #     toolchain: stable
+      #     override: true
+      #     target: aarch64-unknown-linux-musl
+      - uses: houseabsolute/actions-rust-cross@v0
 
       - name: Get the version
         id: get_version
@@ -39,10 +40,14 @@ jobs:
       - name: Install cc
         run: sudo apt-get update && sudo apt-get install --yes gcc
 
-      - uses: actions-rs/cargo@v1
+      # - uses: actions-rs/cargo@v1
+      #   with:
+      #     command: build
+      #     args: --release --target aarch64-unknown-linux-musl
+      - uses: houseabsolute/actions-rust-cross@v0
         with:
-          command: build
-          args: --release --target aarch64-unknown-linux-musl
+          target: aarch64-unknown-linux-musl
+          args: "--locked --release"
 
       - name: Make artifacts dir
         run: mkdir -p artifacts/
