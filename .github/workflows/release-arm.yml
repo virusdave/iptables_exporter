@@ -16,7 +16,7 @@ env:
 
 jobs:
   release:
-    name: Release
+    name: Release Arm
 
     runs-on: ubuntu-latest
 
@@ -39,23 +39,20 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target x86_64-unknown-linux-musl
+          args: --release --target aarch64-unknown-linux-musl
 
       - name: Make artifacts dir
         run: mkdir -p artifacts/
 
       - name: Copy all artifacts into dir
-        run: cp target/x86_64-unknown-linux-musl/release/${{ env.RELEASE_BIN }} ${{ env.RELEASE_ADDS }} artifacts/
+        run: cp target/aarch64-unknown-linux-musl/release/${{ env.RELEASE_BIN }} ${{ env.RELEASE_ADDS }} artifacts/
 
       - name: Create archive for Linux
-        run: cd artifacts/  && tar czf ../${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-x86_64-linux-musl.tar.gz ./*
+        run: cd artifacts/  && tar czf ../${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-aarch64-linux-musl.tar.gz ./*
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           body_path: CHANGELOG.md
           files: |
-            ${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-x86_64-linux-musl.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: virusdave/iptables_exporter
+            ${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-aarch64-linux-musl.tar.gz
